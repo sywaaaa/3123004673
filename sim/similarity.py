@@ -1,25 +1,41 @@
 # sim/similarity.py
-from difflib import SequenceMatcher
 from .preprocess import normalize_text
-from typing import Tuple
-
-def matched_length(a: str, b: str) -> int:
-    """
-    返回 a 与 b 的匹配字符数量（使用 difflib 的 matching blocks）。
-    """
-    sm = SequenceMatcher(None, a, b)
-    # get_matching_blocks() 返回若干 (i,j,n)，最后一个是 (len(a),len(b),0)
-    return sum(block.size for block in sm.get_matching_blocks())
 
 def duplication_rate(orig_text: str, suspect_text: str) -> float:
     """
-    计算重复率（百分比），保留原文长度为分母：
-      rate = matched_chars / len(orig_normalized) * 100
-    若原文长度为 0，返回 0.0
+    基于编辑距离的重复率计算。
+    - 插入、删除、替换算一步操作
+    - 相似度 = (1 - 编辑距离 / max(len(orig), len(suspect))) * 100
     """
+
     a = normalize_text(orig_text)
     b = normalize_text(suspect_text)
-    if not a:
+
+    # 边界情况
+    if not a and not b:
+        return 100.0
+    if not a or not b:
         return 0.0
-    matched = matched_length(a, b)
-    return matched / len(a) * 100.0
+
+    n, m = len(a), len(b)
+
+    # 初始化 DP 表
+    dp = [[0] * (m + 1) for _ in range(n + 1)]
+    for i in range(n + 1):
+        dp[i][0] = i
+    for j in range(m + 1):
+        dp[0][j] = j
+
+    # 动态规划计算编辑距离
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            cost = 0 if a[i - 1] == b[j - 1] else 1
+            dp[i][j] = min(
+                dp[i - 1][j] + 1,       # 删除
+                dp[i][j - 1] + 1,       # 插入
+                dp[i - 1][j - 1] + cost # 替换 / 不变
+            )
+
+    distance = dp[n][m]
+    similarity = (1 - distance / max(n, m)) * 100
+    return round(similarity, 2)
