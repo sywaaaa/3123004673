@@ -1,60 +1,58 @@
 # 文本相似度检测工具
 
-本项目实现了一个基于 **编辑距离（Levenshtein Distance）** 的文本相似度计算函数，用于计算两段文本之间的重复率。
+本项目实现了一个基于 **编辑距离** 的文本相似度计算工具，可以通过命令行比较两篇文本的相似度，并将结果写入指定文件。
 
-## 功能特点
+## 使用方式
 
-* 预处理文本（去除多余空格、统一大小写等）。
-* 使用编辑距离衡量文本差异。
-* 输出重复率（0% \~ 100%）。
-* 提供丰富的单元测试（包含边界情况）。
+命令格式：
 
-## 目录结构
+```bash
+python main.py [orig_file] [suspect_file] [ans_file]
+```
+
+参数说明：
+
+* `orig_file`：原文文件路径
+* `suspect_file`：待检测文件路径
+* `ans_file`：结果输出文件路径
+
+## 示例
+
+假设有以下两个文本文件：
+
+* `orig.txt`
+
+  ```
+  今天真是个天气晴朗的日子
+  ```
+
+* `suspect.txt`
+
+  ```
+  今天是个好日子
+  ```
+
+执行命令：
+
+```bash
+python main.py orig.txt suspect.txt result.txt
+```
+
+运行后，`result.txt` 会输出两段文本的相似度，例如：
+
+```
+66.67%
+```
+
+## 文件结构
 
 ```
 project/
 │── sim/
 │   ├── __init__.py
-│   ├── preprocess.py      # 文本预处理
-│   └── similarity.py      # 相似度计算
-│── tests/
-│   └── test_case.py       # 单元测试
-│── requirements.txt
+│   ├── io.py             # 文件读写
+│   ├── preprocess.py     # 文本预处理
+│   └── similarity.py     # 相似度计算
+│── main.py               # 主程序入口
 │── README.md
 ```
-
-## 安装
-
-建议使用虚拟环境：
-
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux / MacOS
-venv\Scripts\activate     # Windows
-```
-
-安装依赖：
-
-```bash
-pip install -r requirements.txt
-```
-
-## 使用示例
-
-```python
-from sim.similarity import duplication_rate
-
-orig = "今天真是个天气晴朗的日子"
-plag = "今天是个好日子"
-
-rate = duplication_rate(orig, plag)
-print(f"相似度: {rate:.2f}%")  # 输出大约 66.67%
-```
-
-## 运行测试
-
-```bash
-pytest -v
-```
-
-
