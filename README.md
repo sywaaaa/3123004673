@@ -54,6 +54,6 @@ project/
 │   ├── preprocess.py     # 文本预处理
 │   └── similarity.py     # 相似度计算
 │── main.py               # 主程序入口
-│── 大规模性能测试          # 性能测试入口
+│── test_long_high_similarity.py          # 性能测试入口
 │── README.md
 ```
