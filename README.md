@@ -53,7 +53,12 @@ project/
 │   ├── io.py             # 文件读写
 │   ├── preprocess.py     # 文本预处理
 │   └── similarity.py     # 相似度计算
+|── 测试文本
+|── tests/
+|   |──__init__.py
+|   |──__test_case__.py   #边缘测试样例
 │── main.py               # 主程序入口
 │── test_long_high_similarity.py          # 性能测试入口
+│── test.py 测试文本测试入口
 │── README.md
 ```
